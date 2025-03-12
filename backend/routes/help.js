@@ -4,11 +4,11 @@ const { Pool } = require("pg");
 const router = express.Router();
 
 const pool = new Pool({
- user: "your_user",
- host: "localhost",
- database: "hands_on_db",
- password: "your_password",
- port: 5432,
+ user: process.env.DB_USER,
+ host: process.env.DB_HOST,
+ database: process.env.DB_NAME,
+ password: process.env.DB_PASSWORD,
+ port: process.env.DB_PORT,
 });
 
 // Create a help request
@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
   );
   res.status(201).json(result.rows[0]);
  } catch (err) {
-  console.error("Error posting help request:", err); // Add detailed logging
+  console.error("Error posting help request:", err);
   res.status(500).json({ error: "Failed to post help request" });
  }
 });
