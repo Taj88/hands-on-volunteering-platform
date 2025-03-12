@@ -5,10 +5,10 @@ const { Pool } = require("pg");
 
 const router = express.Router();
 const pool = new Pool({
- user: process.env.DB_USER, // replace with your PostgreSQL username
+ user: process.env.DB_USER,
  host: process.env.DB_HOST,
- database: process.env.DB_NAME, // your database name
- password: process.env.DB_PASSWORD, // replace with your PostgreSQL password
+ database: process.env.DB_NAME,
+ password: process.env.DB_PASSWORD,
  port: process.env.DB_PORT,
 });
 
@@ -31,15 +31,22 @@ router.post("/register", async (req, res) => {
 // Login user
 router.post("/login", async (req, res) => {
  const { email, password } = req.body;
+ console.log("Login attempt:", email); // Debugging statement
  try {
   const result = await pool.query("SELECT * FROM users WHERE email = $1", [
    email,
   ]);
   const user = result.rows[0];
-  if (!user) return res.status(400).json({ error: "User not found" });
+  if (!user) {
+   console.log("User not found"); // Debugging statement
+   return res.status(400).json({ error: "User not found" });
+  }
 
   const valid = await bcrypt.compare(password, user.password);
-  if (!valid) return res.status(400).json({ error: "Invalid credentials" });
+  if (!valid) {
+   console.log("Invalid credentials"); // Debugging statement
+   return res.status(400).json({ error: "Invalid credentials" });
+  }
 
   const token = jwt.sign({ id: user.id }, "your_jwt_secret", {
    expiresIn: "1h",

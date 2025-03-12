@@ -18,6 +18,7 @@ function RegistrationForm() {
  const handleSubmit = async (e) => {
   e.preventDefault();
   const endpoint = isLogin ? "/api/auth/login" : "/api/auth/register";
+  console.log("Submitting form:", formData); // Debugging statement
   try {
    const res = await fetch(endpoint, {
     method: "POST",
